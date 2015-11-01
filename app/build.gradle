@@ -5,7 +5,7 @@ android {
     buildToolsVersion "22.0.1"
 
     defaultConfig {
-        applicationId "com.rivancic.nfc.nfc"
+        applicationId "com.rivancic.nfc"
         minSdkVersion 15
         targetSdkVersion 22
         versionCode 1

@@ -1,4 +1,4 @@
-package com.rivancic.nfc.nfc;
+package com.rivancic.nfc;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
