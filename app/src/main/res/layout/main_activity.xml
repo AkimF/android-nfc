@@ -11,11 +11,13 @@
               tools:context=".MainActivity">
 
     <Button
+        android:id="@+id/open_read_btn"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:text="@string/main_activity_read"/>
 
     <Button
+        android:id="@+id/open_write_btn"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:text="@string/main_activity_write"/>

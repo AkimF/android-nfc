@@ -1,16 +1,90 @@
 package com.rivancic.nfc;
 
+import android.app.PendingIntent;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.nfc.NfcAdapter;
+import android.nfc.Tag;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
 public class WriteActivity extends AppCompatActivity {
+
+    Button writeBtn;
+    EditText nfcMessageEt;
+    String messageToWrite;
+    boolean writeMode;
+    NfcAdapter nfcAdapter;
+    PendingIntent nfcPendingIntent;
+    IntentFilter[] writeTagFilters;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.write_activity);
+        nfcAdapter = NfcAdapter.getDefaultAdapter(this);
+        nfcMessageEt = (EditText) findViewById(R.id.nfc_message_et);
+        writeBtn = (Button) findViewById(R.id.write_btn);
+        writeBtn.setOnClickListener(new ButtonWriteClick());
+        nfcPendingIntent = PendingIntent.getActivity(this, 0,
+                new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
+    }
+
+    class ButtonWriteClick implements View.OnClickListener {
+
+
+        @Override
+        public void onClick(View v) {
+
+
+            // NFC: Write id to tag
+            messageToWrite = nfcMessageEt.getText().toString();
+            enableTagWriteMode();
+
+            new AlertDialog.Builder(WriteActivity.this).setTitle("Touch tag to write")
+                    .setOnCancelListener(new DialogInterface.OnCancelListener() {
+                        @Override
+                        public void onCancel(DialogInterface dialog) {
+                            disableTagWriteMode();
+                        }
+                    }).create().show();
+        }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        // Tag writing mode
+        if (writeMode && NfcAdapter.ACTION_TAG_DISCOVERED.equals(intent.getAction())) {
+            Tag detectedTag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
+            if (NfcUtils.writeTag(NfcUtils.getMessageAsNdef(messageToWrite), detectedTag)) {
+                Toast.makeText(this, "Success: Wrote placeid to nfc tag", Toast.LENGTH_LONG)
+                        .show();
+                // NfcUtils.soundNotify(this);
+            } else {
+                Toast.makeText(this, "Write failed", Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+    private void disableTagWriteMode() {
+        writeMode = false;
+        nfcAdapter.disableForegroundDispatch(this);
+    }
+
+
+    private void enableTagWriteMode() {
+        writeMode = true;
+        IntentFilter tagDetected = new IntentFilter(NfcAdapter.ACTION_TAG_DISCOVERED);
+        writeTagFilters = new IntentFilter[] { tagDetected };
+        nfcAdapter.enableForegroundDispatch(this, nfcPendingIntent, writeTagFilters, null);
     }
 
     @Override
