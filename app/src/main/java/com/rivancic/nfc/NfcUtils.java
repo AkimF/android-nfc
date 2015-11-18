@@ -1,5 +1,6 @@
 package com.rivancic.nfc;
 
+import android.content.Context;
 import android.content.Intent;
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
@@ -8,6 +9,8 @@ import android.nfc.Tag;
 import android.nfc.tech.Ndef;
 import android.nfc.tech.NdefFormatable;
 import android.os.Parcelable;
+import android.view.View;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.logging.Logger;
@@ -19,6 +22,20 @@ import java.util.logging.Logger;
 public class NfcUtils {
 
     private static Logger LOG = Logger.getLogger(NfcUtils.class.getName());
+
+    /**
+     *
+     * @return true if this device has NfcAdapter support this means it supports NFC technology,
+     * otherwise return false.
+     */
+    public static boolean hasNFCSupport(Context context) {
+        boolean result = true;
+        NfcAdapter myNfcAdapter = NfcAdapter.getDefaultAdapter(context);
+        if (myNfcAdapter == null) {
+            result = false;
+        }
+        return result;
+    }
 
     public static NdefMessage[] getNdefMessages(Intent intent) {
         // Parse the intent
@@ -98,9 +115,9 @@ public class NfcUtils {
      */
     public static NdefMessage getMessageAsNdef(String messageToWrite) {
 
-            byte[] textBytes = messageToWrite.getBytes();
-            NdefRecord textRecord = new NdefRecord(NdefRecord.TNF_MIME_MEDIA,
-                    "application/com.rivancic.nfc".getBytes(), new byte[]{}, textBytes);
-            return new NdefMessage(new NdefRecord[]{textRecord});
+        byte[] textBytes = messageToWrite.getBytes();
+        NdefRecord textRecord = new NdefRecord(NdefRecord.TNF_MIME_MEDIA,
+                "application/com.rivancic.nfc".getBytes(), new byte[]{}, textBytes);
+        return new NdefMessage(new NdefRecord[]{textRecord});
     }
 }
