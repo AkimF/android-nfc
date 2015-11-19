@@ -30,5 +30,11 @@
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".ReadExplicitActivity"
+            android:label="@string/title_activity_read_explicit">
+        </activity>
+
     </application>
 </manifest>

@@ -83,7 +83,7 @@ public class WriteActivity extends AppCompatActivity {
     private void enableTagWriteMode() {
         writeMode = true;
         IntentFilter tagDetected = new IntentFilter(NfcAdapter.ACTION_TAG_DISCOVERED);
-        writeTagFilters = new IntentFilter[] { tagDetected };
+        writeTagFilters = new IntentFilter[]{tagDetected};
         nfcAdapter.enableForegroundDispatch(this, nfcPendingIntent, writeTagFilters, null);
     }
 

@@ -13,6 +13,7 @@ import android.widget.Toast;
 public class MainActivity extends AppCompatActivity {
 
     Button openReadBtn;
+    Button openReadExplicitBtn;
     Button openWriteBtn;
 
 
@@ -21,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
         openReadBtn = (Button) findViewById(R.id.open_read_btn);
+        openReadExplicitBtn = (Button) findViewById(R.id.open_read_explicit_btn);
         openWriteBtn = (Button) findViewById(R.id.open_write_btn);
         openReadBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -32,6 +34,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(MainActivity.this, WriteActivity.class));
+            }
+        });
+        openReadExplicitBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, ReadExplicitActivity.class));
             }
         });
 

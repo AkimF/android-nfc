@@ -9,8 +9,6 @@ import android.nfc.Tag;
 import android.nfc.tech.Ndef;
 import android.nfc.tech.NdefFormatable;
 import android.os.Parcelable;
-import android.view.View;
-import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.logging.Logger;
