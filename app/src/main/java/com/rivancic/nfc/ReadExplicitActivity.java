@@ -5,15 +5,22 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.nfc.NdefMessage;
 import android.nfc.NfcAdapter;
-import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
+/**
+ * This Activity does not have defined Intent Filter in the Android Manifest to filter the NFC
+ * Intents. Instead it registers itself to the Foreground dispatch system which gives the priority
+ * to the current running activities. The follow steps should be followed:
+ * enableForegroundDispatch and disableForegroundDispatch must be called in between resume and on
+ * destroy lifecycle events. For example the exception will be thrown if you call
+ * enableForegroundDispatch in the onCreate method.
+ * Because we specify in the pending intent that will be used to invoke this activity the flag to
+ * FLAG_ACTIVITY_SINGLE_TOP this activity won't be recreated on call and instead only the
+ * onNewIntent will be called with the Intent that contains data with the NDEF message.
+ */
 public class ReadExplicitActivity extends AppCompatActivity {
 
     View noTagV;
@@ -22,12 +29,6 @@ public class ReadExplicitActivity extends AppCompatActivity {
     PendingIntent nfcPendingIntent;
     IntentFilter[] writeTagFilters;
     NfcAdapter nfcAdapter;
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        nfcAdapter.disableForegroundDispatch(this);
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +46,12 @@ public class ReadExplicitActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         enableTagWriteMode();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        nfcAdapter.disableForegroundDispatch(this);
     }
 
     private void enableTagWriteMode() {

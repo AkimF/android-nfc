@@ -4,11 +4,13 @@ import android.nfc.NdefMessage;
 import android.nfc.NfcAdapter;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+/**
+ * This activity will be invoked with the Intent dispatch system. If no other activity has higher
+ * priority of getting the NFC Intent. The filter is more specific.
+ */
 public class ReadActivity extends AppCompatActivity {
 
     View noTagV;
@@ -24,6 +26,10 @@ public class ReadActivity extends AppCompatActivity {
         readV = findViewById(R.id.nfc_read_v);
     }
 
+    /**
+     * The value of the intent is set by the dispatch system. It should carry the NDEF message
+     * because the intent filter definition form the Android Manifest file.
+     */
     @Override
     protected void onResume() {
         super.onResume();
@@ -35,27 +41,5 @@ public class ReadActivity extends AppCompatActivity {
             readV.setVisibility(View.VISIBLE);
             tagValueTv.setText(id);
         }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_read, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 }

@@ -22,7 +22,6 @@ public class NfcUtils {
     private static Logger LOG = Logger.getLogger(NfcUtils.class.getName());
 
     /**
-     *
      * @return true if this device has NfcAdapter support this means it supports NFC technology,
      * otherwise return false.
      */
@@ -108,8 +107,6 @@ public class NfcUtils {
 
     /**
      * Converts a String into a NdefMessage in application/com.rivancic.nfc MIMEtype.
-     * <p/>
-     * for writing Places
      */
     public static NdefMessage getMessageAsNdef(String messageToWrite) {
 
