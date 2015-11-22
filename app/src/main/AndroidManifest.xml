@@ -36,5 +36,10 @@
             android:label="@string/title_activity_read_explicit">
         </activity>
 
+        <activity
+            android:name=".WriteVCardActivity"
+            android:label="Write vCard">
+        </activity>
+
     </application>
 </manifest>

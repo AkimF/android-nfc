@@ -11,6 +11,7 @@ import android.nfc.tech.NdefFormatable;
 import android.os.Parcelable;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.logging.Logger;
 
 /**
@@ -107,12 +108,28 @@ public class NfcUtils {
 
     /**
      * Converts a String into a NdefMessage in application/com.rivancic.nfc MIMEtype.
+     * TODO extract to method creating records and then make a method that composes records into a message.
      */
-    public static NdefMessage getMessageAsNdef(String messageToWrite) {
+    public static NdefMessage getMediaMessageAsNdef(String messageToWrite, String type) {
 
         byte[] textBytes = messageToWrite.getBytes();
         NdefRecord textRecord = new NdefRecord(NdefRecord.TNF_MIME_MEDIA,
-                "application/com.rivancic.nfc".getBytes(), new byte[]{}, textBytes);
+                type.getBytes(), new byte[]{}, textBytes);
         return new NdefMessage(new NdefRecord[]{textRecord});
+    }
+
+    /**
+     * Converts a String into a NdefMessage in application/com.rivancic.nfc MIMEtype.
+     * TODO fix, complete..
+     */
+    public static NdefMessage getUrlMessageAsNdef(String url, String prefix) {
+        byte[] uriField = url.getBytes(Charset.forName("US-ASCII"));
+        byte[] payload = new byte[uriField.length + 1];
+        payload[0] = 0x01;
+        System.arraycopy(uriField, 0, payload, 1, uriField.length);
+        NdefRecord uriRecord = new NdefRecord(
+                NdefRecord.TNF_WELL_KNOWN, NdefRecord.RTD_URI, new byte[0], payload);
+        NdefMessage newMessage = new NdefMessage(new NdefRecord[]{uriRecord});
+        return  newMessage;
     }
 }

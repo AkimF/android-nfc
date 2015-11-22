@@ -15,6 +15,7 @@ public class MainActivity extends AppCompatActivity {
     Button openReadBtn;
     Button openReadExplicitBtn;
     Button openWriteBtn;
+    Button openWriteVCardBtn;
 
 
     @Override
@@ -24,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
         openReadBtn = (Button) findViewById(R.id.open_read_btn);
         openReadExplicitBtn = (Button) findViewById(R.id.open_read_explicit_btn);
         openWriteBtn = (Button) findViewById(R.id.open_write_btn);
+        openWriteVCardBtn = (Button) findViewById(R.id.open_write_vcard_btn);
         openReadBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -34,6 +36,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(MainActivity.this, WriteActivity.class));
+            }
+        });
+        openWriteVCardBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, WriteVCardActivity.class));
             }
         });
         openReadExplicitBtn.setOnClickListener(new View.OnClickListener() {

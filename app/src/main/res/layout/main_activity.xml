@@ -28,4 +28,10 @@
         android:layout_height="wrap_content"
         android:text="@string/main_activity_write_explicit"/>
 
+    <Button
+        android:id="@+id/open_write_vcard_btn"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:text="Write vCard"/>
+
 </LinearLayout>
