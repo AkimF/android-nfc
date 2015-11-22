@@ -16,7 +16,7 @@ import android.widget.Toast;
 
 public class Write2RecordsActivity extends AppCompatActivity {
 
-    private static final String = "https://www.useit.at/"
+    private static final String url = "https://www.useit.at/";
     Button writeBtn;
     EditText nfcMessageEt;
     String messageToWrite;
