@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.rivancic.nfc.NfcUtils;
 import com.rivancic.nfc.R;
+import com.rivancic.nfc.Security;
 
 public class WriteLoyaltyCard extends AppCompatActivity {
 
@@ -67,7 +68,8 @@ public class WriteLoyaltyCard extends AppCompatActivity {
         if (writeMode && NfcAdapter.ACTION_NDEF_DISCOVERED.equals(intent.getAction())) {
             Tag detectedTag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
             NdefRecord urlRecord = NfcUtils.getUrlRecord(url, prefix);
-            NdefRecord customRecord = NfcUtils.getMediaRecord(messageToWrite, mimeType);
+            String secureMessage = Security.encriptData(messageToWrite);
+            NdefRecord customRecord = NfcUtils.getMediaRecord(secureMessage, mimeType);
             if (NfcUtils.writeTag(new NdefMessage(new NdefRecord[]{urlRecord, customRecord}), detectedTag)) {
                 Toast.makeText(this, "Success: Wrote custom data to nfc tag", Toast.LENGTH_LONG)
                         .show();
