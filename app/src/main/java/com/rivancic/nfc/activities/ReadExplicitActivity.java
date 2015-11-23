@@ -1,4 +1,4 @@
-package com.rivancic.nfc;
+package com.rivancic.nfc.activities;
 
 import android.app.PendingIntent;
 import android.content.Intent;
@@ -9,6 +9,9 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
+
+import com.rivancic.nfc.NfcUtils;
+import com.rivancic.nfc.R;
 
 /**
  * This Activity does not have defined Intent Filter in the Android Manifest to filter the NFC

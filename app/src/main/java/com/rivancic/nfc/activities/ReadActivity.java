@@ -1,4 +1,4 @@
-package com.rivancic.nfc;
+package com.rivancic.nfc.activities;
 
 import android.nfc.NdefMessage;
 import android.nfc.NfcAdapter;
@@ -6,6 +6,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
+
+import com.rivancic.nfc.NfcUtils;
+import com.rivancic.nfc.R;
 
 /**
  * This activity will be invoked with the Intent dispatch system. If no other activity has higher
