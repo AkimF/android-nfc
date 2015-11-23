@@ -40,6 +40,10 @@
             android:name=".activities.WriteVCardActivity"
             android:label="Write vCard">
         </activity>
+        <activity
+            android:name=".activities.WriteLoyaltyCard"
+            android:label="Write Loyalty Card">
+        </activity>
 
     </application>
 </manifest>

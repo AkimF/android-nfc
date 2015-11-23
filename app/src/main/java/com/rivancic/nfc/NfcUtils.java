@@ -159,7 +159,7 @@ public class NfcUtils {
      * 3 0x03 http://
      * 4 0x04 https://
      */
-    enum RTDPrefix {
+    public enum RTDPrefix {
         HTTP_WWW, HTTPS_WWW, HTTP, HTTPS;
 
         /**

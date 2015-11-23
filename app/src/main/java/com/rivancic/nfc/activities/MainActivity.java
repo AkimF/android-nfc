@@ -15,6 +15,7 @@ public class MainActivity extends AppCompatActivity {
     Button openReadExplicitBtn;
     Button openWriteBtn;
     Button openWriteVCardBtn;
+    Button loyaltyBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
         openReadExplicitBtn = (Button) findViewById(R.id.open_read_explicit_btn);
         openWriteBtn = (Button) findViewById(R.id.open_write_btn);
         openWriteVCardBtn = (Button) findViewById(R.id.open_write_vcard_btn);
+        loyaltyBtn = (Button) findViewById(R.id.loyalty_btn);
         openWriteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -41,8 +43,14 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this, ReadExplicitActivity.class));
             }
         });
+        loyaltyBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, WriteLoyaltyCard.class));
+            }
+        });
 
-        if(!NfcUtils.hasNFCSupport(this)) {
+        if (!NfcUtils.hasNFCSupport(this)) {
             Toast.makeText(this, "NFC is not available for the device.", Toast.LENGTH_LONG).show();
             openReadExplicitBtn.setVisibility(View.GONE);
             openWriteBtn.setVisibility(View.GONE);

@@ -28,4 +28,10 @@
         android:layout_height="wrap_content"
         android:text="Write vCard"/>
 
+    <Button
+        android:id="@+id/loyalty_btn"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:text="Write Loyalty Tag"/>
+
 </LinearLayout>

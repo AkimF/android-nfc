@@ -4,6 +4,7 @@ import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
@@ -18,9 +19,10 @@ import android.widget.Toast;
 import com.rivancic.nfc.NfcUtils;
 import com.rivancic.nfc.R;
 
-public class Write2RecordsActivity extends AppCompatActivity {
+public class WriteLoyaltyCard extends AppCompatActivity {
 
-    private static final String url = "https://www.useit.at/";
+    private static final String url = "useit.at/";
+    private static final NfcUtils.RTDPrefix prefix = NfcUtils.RTDPrefix.HTTPS_WWW;
     Button writeBtn;
     EditText nfcMessageEt;
     String messageToWrite;
@@ -49,7 +51,7 @@ public class Write2RecordsActivity extends AppCompatActivity {
 
             messageToWrite = nfcMessageEt.getText().toString();
             enableTagWriteMode();
-            new AlertDialog.Builder(Write2RecordsActivity.this).setTitle("Touch tag to write")
+            new AlertDialog.Builder(WriteLoyaltyCard.this).setTitle("Touch tag to write")
                     .setOnCancelListener(new DialogInterface.OnCancelListener() {
                         @Override
                         public void onCancel(DialogInterface dialog) {
@@ -62,11 +64,12 @@ public class Write2RecordsActivity extends AppCompatActivity {
     @Override
     protected void onNewIntent(Intent intent) {
         // Tag writing mode
-        if (writeMode && NfcAdapter.ACTION_TAG_DISCOVERED.equals(intent.getAction())) {
+        if (writeMode && NfcAdapter.ACTION_NDEF_DISCOVERED.equals(intent.getAction())) {
             Tag detectedTag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
-            NdefRecord record = NfcUtils.getMediaRecord(messageToWrite, mimeType);
-            if (NfcUtils.writeTag(NfcUtils.getNdefMessage(record), detectedTag)) {
-                Toast.makeText(this, "Success: Wrote custom media to nfc tag", Toast.LENGTH_LONG)
+            NdefRecord urlRecord = NfcUtils.getUrlRecord(url, prefix);
+            NdefRecord customRecord = NfcUtils.getMediaRecord(messageToWrite, mimeType);
+            if (NfcUtils.writeTag(new NdefMessage(new NdefRecord[]{urlRecord, customRecord}), detectedTag)) {
+                Toast.makeText(this, "Success: Wrote custom data to nfc tag", Toast.LENGTH_LONG)
                         .show();
             } else {
                 Toast.makeText(this, "Write failed", Toast.LENGTH_LONG).show();
@@ -83,6 +86,6 @@ public class Write2RecordsActivity extends AppCompatActivity {
         writeMode = true;
         IntentFilter tagDetected = new IntentFilter(NfcAdapter.ACTION_TAG_DISCOVERED);
         writeTagFilters = new IntentFilter[]{tagDetected};
-        nfcAdapter.enableForegroundDispatch(this, nfcPendingIntent, writeTagFilters, null);
+        nfcAdapter.enableForegroundDispatch(this, nfcPendingIntent, null, null);
     }
 }
