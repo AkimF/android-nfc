@@ -12,7 +12,6 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
-    Button openReadBtn;
     Button openReadExplicitBtn;
     Button openWriteBtn;
     Button openWriteVCardBtn;
@@ -22,16 +21,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
-        openReadBtn = (Button) findViewById(R.id.open_read_btn);
         openReadExplicitBtn = (Button) findViewById(R.id.open_read_explicit_btn);
         openWriteBtn = (Button) findViewById(R.id.open_write_btn);
         openWriteVCardBtn = (Button) findViewById(R.id.open_write_vcard_btn);
-        openReadBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, ReadActivity.class));
-            }
-        });
         openWriteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -53,7 +45,6 @@ public class MainActivity extends AppCompatActivity {
 
         if(!NfcUtils.hasNFCSupport(this)) {
             Toast.makeText(this, "NFC is not available for the device.", Toast.LENGTH_LONG).show();
-            openReadBtn.setVisibility(View.GONE);
             openReadExplicitBtn.setVisibility(View.GONE);
             openWriteBtn.setVisibility(View.GONE);
         }
