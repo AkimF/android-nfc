@@ -70,8 +70,8 @@ public class NfcUtils {
      * Writes an NdefMessage to a NFC tag
      *
      * @param message that should be written to the tag.
-     * @param tag
-     * @return
+     * @param tag     discovered tag.
+     * @return flag that tells if the message was successfully written to the tag.
      */
     public static boolean writeTag(NdefMessage message, Tag tag) {
         int size = message.toByteArray().length;
@@ -108,28 +108,82 @@ public class NfcUtils {
 
     /**
      * Converts a String into a NdefMessage in application/com.rivancic.nfc MIMEtype.
-     * TODO extract to method creating records and then make a method that composes records into a message.
      */
-    public static NdefMessage getMediaMessageAsNdef(String messageToWrite, String type) {
+    public static NdefRecord getMediaRecord(String messageToWrite, String type) {
 
         byte[] textBytes = messageToWrite.getBytes();
         NdefRecord textRecord = new NdefRecord(NdefRecord.TNF_MIME_MEDIA,
                 type.getBytes(), new byte[]{}, textBytes);
-        return new NdefMessage(new NdefRecord[]{textRecord});
+        return textRecord;
     }
+
+    /**
+     * Helper getting NdefMessage form one record.
+     *
+     * @param record The single NdefRecord instance.
+     * @return Initialized NdefMessage form NdefRecord.
+     */
+    public static NdefMessage getNdefMessage(NdefRecord record) {
+
+        return new NdefMessage(new NdefRecord[]{record});
+    }
+
 
     /**
      * Converts a String into a NdefMessage in application/com.rivancic.nfc MIMEtype.
      * TODO fix, complete..
      */
-    public static NdefMessage getUrlMessageAsNdef(String url, String prefix) {
+
+    /**
+     * Get url and the prefix as arguments and convert them to the NdefRecord of TNF type WELL_KNOWN and RTD of URI.
+     *
+     * @param url    url of the uri
+     * @param prefix prefix of uri which can be http:// or https:// ...
+     * @return NdefRecord instance.
+     */
+    public static NdefRecord getUrlRecord(String url, RTDPrefix prefix) {
+
         byte[] uriField = url.getBytes(Charset.forName("US-ASCII"));
         byte[] payload = new byte[uriField.length + 1];
-        payload[0] = 0x01;
+        payload[0] = prefix.getHex();
         System.arraycopy(uriField, 0, payload, 1, uriField.length);
         NdefRecord uriRecord = new NdefRecord(
                 NdefRecord.TNF_WELL_KNOWN, NdefRecord.RTD_URI, new byte[0], payload);
-        NdefMessage newMessage = new NdefMessage(new NdefRecord[]{uriRecord});
-        return  newMessage;
+        return uriRecord;
+    }
+
+    /**
+     * Enum for specifying URI prefixes
+     * 1 0x01 http://www.
+     * 2 0x02 https://www.
+     * 3 0x03 http://
+     * 4 0x04 https://
+     */
+    enum RTDPrefix {
+        HTTP_WWW, HTTPS_WWW, HTTP, HTTPS;
+
+        /**
+         * @return hexadecimal representation of the prefix. Used at building the NdefRecord.
+         */
+        byte getHex() {
+
+            byte result = 0x01;
+            switch (this) {
+
+                case HTTP_WWW:
+                    result = 0x01;
+                    break;
+                case HTTPS_WWW:
+                    result = 0x02;
+                    break;
+                case HTTP:
+                    result = 0x03;
+                    break;
+                case HTTPS:
+                    result = 0x04;
+                    break;
+            }
+            return result;
+        }
     }
 }

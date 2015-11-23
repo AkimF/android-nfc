@@ -4,6 +4,7 @@ import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.support.v7.app.AlertDialog;
@@ -23,6 +24,7 @@ public class WriteActivity extends AppCompatActivity {
     NfcAdapter nfcAdapter;
     PendingIntent nfcPendingIntent;
     IntentFilter[] writeTagFilters;
+    private static final String mimeType = "application/com.rivancic.nfc";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,11 +64,10 @@ public class WriteActivity extends AppCompatActivity {
         // Tag writing mode
         if (writeMode && NfcAdapter.ACTION_TAG_DISCOVERED.equals(intent.getAction())) {
             Tag detectedTag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
-            if (NfcUtils.writeTag(NfcUtils.getMediaMessageAsNdef(messageToWrite,
-                    "application/com.rivancic.nfc"), detectedTag)) {
-                Toast.makeText(this, "Success: Wrote placeid to nfc tag", Toast.LENGTH_LONG)
+            NdefRecord record = NfcUtils.getMediaRecord(messageToWrite, mimeType);
+            if (NfcUtils.writeTag(NfcUtils.getNdefMessage(record), detectedTag)) {
+                Toast.makeText(this, "Success: Wrote custom media to nfc tag", Toast.LENGTH_LONG)
                         .show();
-                // NfcUtils.soundNotify(this);
             } else {
                 Toast.makeText(this, "Write failed", Toast.LENGTH_LONG).show();
             }

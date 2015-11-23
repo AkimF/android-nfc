@@ -4,6 +4,7 @@ import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.os.Bundle;
@@ -31,6 +32,7 @@ public class WriteVCardActivity extends AppCompatActivity {
     NfcAdapter nfcAdapter;
     PendingIntent nfcPendingIntent;
     IntentFilter[] writeTagFilters;
+    private static final String mimeType = "text/vcard";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,40 +50,20 @@ public class WriteVCardActivity extends AppCompatActivity {
                 new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
     }
 
-
-    private String builVCardNfcMessage() {
-
-        String result = "";
-        String beginVcard = "BEGIN:VCARD\n";
-        String versionVcard = "VERSION:4.0\n";
-        String nameVcard = String.format("N:%s;%s\n", lastNameEt.getText().toString(), firstNameEt.getText().toString());
-        String emailVcard = String.format("EMAIL:%s\n",emailEt.getText().toString());
-        String titleVcard = String.format("TITLE:%s\n",titleEt.getText().toString());
-        String base64ImageData = "";
-        String photoVcard = String.format("PHOTO:data:image/jpeg;base64,%s\n", base64ImageData);
-        String urlVcard = String.format("URL:%s\n", urlEt.getText().toString());
-        String endVcard = "END:VCARD";
-
-        result = beginVcard +
-                versionVcard +
-                nameVcard +
-                emailVcard +
-                titleVcard +
-                urlVcard +
-                endVcard;
-
-        return result;
-    }
-
     class ButtonWriteClick implements View.OnClickListener {
 
         @Override
         public void onClick(View v) {
 
             // NFC: Write id to tag
-            messageToWrite = builVCardNfcMessage();
+            VCard vCard = new VCard();
+            vCard.setFirstName(firstNameEt.getText().toString());
+            vCard.setLastName(lastNameEt.getText().toString());
+            vCard.setEmail(emailEt.getText().toString());
+            vCard.setTitle(titleEt.getText().toString());
+            vCard.setUrl(urlEt.getText().toString());
+            messageToWrite = vCard.builVCardNfcMessage();
             enableTagWriteMode();
-
             new AlertDialog.Builder(WriteVCardActivity.this).setTitle("Touch tag to write")
                     .setOnCancelListener(new DialogInterface.OnCancelListener() {
                         @Override
@@ -97,12 +79,10 @@ public class WriteVCardActivity extends AppCompatActivity {
         // Tag writing mode
         if (writeMode && NfcAdapter.ACTION_TAG_DISCOVERED.equals(intent.getAction())) {
             Tag detectedTag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
-            // "application/com.rivancic.nfc"
-            if (NfcUtils.writeTag(NfcUtils.getMediaMessageAsNdef(messageToWrite, "text/vcard"),
-                    detectedTag)) {
+            NdefRecord record = NfcUtils.getMediaRecord(messageToWrite, mimeType);
+            if (NfcUtils.writeTag(NfcUtils.getNdefMessage(record), detectedTag)) {
                 Toast.makeText(this, "Success: Wrote placeid to nfc tag", Toast.LENGTH_LONG)
                         .show();
-                // NfcUtils.soundNotify(this);
             } else {
                 Toast.makeText(this, "Write failed", Toast.LENGTH_LONG).show();
             }
