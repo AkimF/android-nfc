@@ -47,11 +47,8 @@ public class WriteActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
 
-
-            // NFC: Write id to tag
             messageToWrite = nfcMessageEt.getText().toString();
             enableTagWriteMode();
-
             new AlertDialog.Builder(WriteActivity.this).setTitle("Touch tag to write")
                     .setOnCancelListener(new DialogInterface.OnCancelListener() {
                         @Override

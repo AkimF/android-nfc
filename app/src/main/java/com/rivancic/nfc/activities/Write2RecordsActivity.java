@@ -44,15 +44,11 @@ public class Write2RecordsActivity extends AppCompatActivity {
 
     class ButtonWriteClick implements View.OnClickListener {
 
-
         @Override
         public void onClick(View v) {
 
-
-            // NFC: Write id to tag
             messageToWrite = nfcMessageEt.getText().toString();
             enableTagWriteMode();
-
             new AlertDialog.Builder(Write2RecordsActivity.this).setTitle("Touch tag to write")
                     .setOnCancelListener(new DialogInterface.OnCancelListener() {
                         @Override

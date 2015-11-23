@@ -16,7 +16,6 @@ public class MainActivity extends AppCompatActivity {
     Button openWriteBtn;
     Button openWriteVCardBtn;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
