@@ -85,7 +85,7 @@ public class WriteVCardActivity extends AppCompatActivity {
             Tag detectedTag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
             NdefRecord record = NfcUtils.getMediaRecord(messageToWrite, mimeType);
             if (NfcUtils.writeTag(NfcUtils.getNdefMessage(record), detectedTag)) {
-                Toast.makeText(this, "Success: Wrote placeid to nfc tag", Toast.LENGTH_LONG)
+                Toast.makeText(this, "Success: Wrote vCard to NFC tag", Toast.LENGTH_LONG)
                         .show();
             } else {
                 Toast.makeText(this, "Write failed", Toast.LENGTH_LONG).show();
