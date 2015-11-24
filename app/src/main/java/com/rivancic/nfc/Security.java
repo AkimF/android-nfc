@@ -8,9 +8,11 @@ import java.security.NoSuchAlgorithmException;
 import se.simbio.encryption.Encryption;
 
 /**
+ * <p>
  * Use library to encript and decript data.
  * <p/>
- * // TODO implement async.
+ * TODO implement async.
+ * TODO secure credentials
  * Created by rivancic on 23/11/15.
  */
 public class Security {
