@@ -20,6 +20,8 @@ import com.rivancic.nfc.NfcUtils;
 import com.rivancic.nfc.R;
 import com.rivancic.nfc.Security;
 
+import se.simbio.encryption.Encryption;
+
 public class WriteLoyaltyCard extends AppCompatActivity {
 
     private static final String url = "useit.at/";
@@ -31,6 +33,7 @@ public class WriteLoyaltyCard extends AppCompatActivity {
     NfcAdapter nfcAdapter;
     PendingIntent nfcPendingIntent;
     IntentFilter[] writeTagFilters;
+    String secureMessage;
     private static final String mimeType = "application/com.rivancic.nfc";
 
     @Override
@@ -45,20 +48,36 @@ public class WriteLoyaltyCard extends AppCompatActivity {
                 new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
     }
 
+    /**
+     * Encrypt the message from EditText.
+     */
     class ButtonWriteClick implements View.OnClickListener {
 
         @Override
         public void onClick(View v) {
 
             messageToWrite = nfcMessageEt.getText().toString();
-            enableTagWriteMode();
-            new AlertDialog.Builder(WriteLoyaltyCard.this).setTitle("Touch tag to write")
-                    .setOnCancelListener(new DialogInterface.OnCancelListener() {
-                        @Override
-                        public void onCancel(DialogInterface dialog) {
-                            disableTagWriteMode();
-                        }
-                    }).create().show();
+            Security.encriptData(messageToWrite, new Encryption.Callback() {
+                @Override
+                public void onSuccess(String result) {
+                    secureMessage = result;
+                    enableTagWriteMode();
+                    new AlertDialog.Builder(WriteLoyaltyCard.this).setTitle("Touch tag to write")
+                            .setOnCancelListener(new DialogInterface.OnCancelListener() {
+                                @Override
+                                public void onCancel(DialogInterface dialog) {
+                                    disableTagWriteMode();
+                                }
+                            }).create().show();
+                }
+
+                @Override
+                public void onError(Exception exception) {
+                    Toast.makeText(WriteLoyaltyCard.this, "Could not encode message", Toast.LENGTH_LONG)
+                            .show();
+                }
+            });
+
         }
     }
 
@@ -68,7 +87,6 @@ public class WriteLoyaltyCard extends AppCompatActivity {
         if (writeMode && NfcAdapter.ACTION_NDEF_DISCOVERED.equals(intent.getAction())) {
             Tag detectedTag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
             NdefRecord urlRecord = NfcUtils.getUrlRecord(url, prefix);
-            String secureMessage = Security.encriptData(messageToWrite);
             NdefRecord customRecord = NfcUtils.getMediaRecord(secureMessage, mimeType);
             if (NfcUtils.writeTag(new NdefMessage(new NdefRecord[]{urlRecord, customRecord}), detectedTag)) {
                 Toast.makeText(this, "Success: Wrote custom data to nfc tag", Toast.LENGTH_LONG)
@@ -81,11 +99,13 @@ public class WriteLoyaltyCard extends AppCompatActivity {
 
     private void disableTagWriteMode() {
         writeMode = false;
+        nfcMessageEt.setEnabled(true);
         nfcAdapter.disableForegroundDispatch(this);
     }
 
     private void enableTagWriteMode() {
         writeMode = true;
+        nfcMessageEt.setEnabled(false);
         IntentFilter tagDetected = new IntentFilter(NfcAdapter.ACTION_TAG_DISCOVERED);
         writeTagFilters = new IntentFilter[]{tagDetected};
         nfcAdapter.enableForegroundDispatch(this, nfcPendingIntent, null, null);

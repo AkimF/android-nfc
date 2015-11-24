@@ -11,7 +11,7 @@ import se.simbio.encryption.Encryption;
  * <p>
  * Use library to encript and decript data.
  * <p/>
- * TODO implement async.
+ * implement async.
  * TODO secure credentials
  * Created by rivancic on 23/11/15.
  */
@@ -28,7 +28,7 @@ public class Security {
                     .setSalt("YourSalt")
                     .setIv(iv)
                     .setCharsetName("UTF8")
-                    .setIterationCount(10)
+                    .setIterationCount(100)
                     .setDigestAlgorithm("SHA1")
                     .setBase64Mode(Base64.DEFAULT)
                     .setAlgorithm("AES/CBC/PKCS5Padding")
@@ -40,9 +40,9 @@ public class Security {
         }
     }
 
-    public static String encriptData(String rawData) {
+    public static void encriptData(String rawData, Encryption.Callback callback) {
 
-        return encryption.encryptOrNull(rawData);
+        encryption.encryptAsync(rawData, callback);
     }
 
     public static String decriptData(String encriptedData) {
