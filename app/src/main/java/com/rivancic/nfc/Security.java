@@ -11,8 +11,6 @@ import se.simbio.encryption.Encryption;
  * <p>
  * Use library to encript and decript data.
  * <p/>
- * implement async.
- * TODO secure credentials
  * Created by rivancic on 23/11/15.
  */
 public class Security {

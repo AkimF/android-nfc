@@ -11,3 +11,5 @@ Reading NFC tags:
 
  - TNF_MIME_MEDIA custom application mime type
     - With intent filter in AndroidManifest and as Foreground Dispatch System
+    
+For data encryption <a href="https://github.com/simbiose/Encryption">se.simbio.encryption:library:1.2.0</a> is used under GNU Lesser General Public License at version 3.
